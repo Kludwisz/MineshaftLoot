@@ -26,55 +26,54 @@ public class MineshaftLoot
 	private static ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
 	private static ArrayList<Corridor> corridors = new ArrayList<>();
 
-    // needs to be done in the same order as piece generation !
-    // returns chest positions and loot seeds (for use with the LootContext object)
-    private static ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(Corridor c, BlockBox chunk, long structureSeed)
-    {
-    	if (c.hasCobwebs) {
-    		// getting chest loot from spider corridors would require
-    		// additional cobweb placement simulations, so here it's skipped
-    		skipCallsInPieceInChunk(c, chunk, structureSeed);
-    		return new ArrayList<Pair<BPos, Long>>();
-    	}
+	// needs to be done in the same order as piece generation !
+	// returns chest positions and loot seeds (for use with the LootContext object)
+	private static ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(Corridor c, BlockBox chunk, long structureSeed)
+	{
+		if (c.hasCobwebs) {
+			// getting chest loot from spider corridors would require
+			// additional cobweb placement simulations, so here it's skipped
+			skipCallsInPieceInChunk(c, chunk, structureSeed);
+			return new ArrayList<Pair<BPos, Long>>();
+		}
     	
-    	int m = c.length * 5;
-        LCG skipCeiling = LCG.JAVA.combine(m * 3);
-        ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
+		int m = c.length * 5;
+		LCG skipCeiling = LCG.JAVA.combine(m * 3);
+		ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
 
-        //   skip ceiling air blocks
-        rand.advance(skipCeiling);
+		//   skip ceiling air blocks
+		rand.advance(skipCeiling);
         
-        CoordinateTransformer.setParams(c.direction, c.bb);
-        BPos chest;
-        int center;
+		CoordinateTransformer.setParams(c.direction, c.bb);
+		BPos chest;
+		int center;
         
-        // length = numsections from the mc source code
-        for (int j=0; j<c.length; j++) {
-        	center = j*5 + 2;
+		// length = numsections from the mc source code
+		for (int j=0; j<c.length; j++) {
+			center = j*5 + 2;
         	
-        	//   supports, cobwebs and chests check for proper chunk placement first and only then make rand calls
-            //   that's why we need to skip only the calls that would occur inside the chunk's BlockBox
-        	//   for supports, we also need an extra isSupportingBox method (defined in CoordinateTransformer)
-        	if (CoordinateTransformer.isSupportingBox(center, chunk)) {
-        		if(rand.nextInt(4) != 0) {
-                    rand.advance(skipTorches);
-                }
-        	}
+			//   supports, cobwebs and chests check for proper chunk placement first and only then make rand calls
+			//   that's why we need to skip only the calls that would occur inside the chunk's BlockBox
+			//   for supports, we also need an extra isSupportingBox method (defined in CoordinateTransformer)
+			if (CoordinateTransformer.isSupportingBox(center, chunk)) {
+				if(rand.nextInt(4) != 0)
+					rand.advance(skipTorches);
+			}
             
-        	//   cobwebs
-            for (int i=0; i<8; i++) {
-            	if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i]))) 
-            		rand.advance(skipSingleCall);
-            }
+			//   cobwebs
+			for (int i=0; i<8; i++) {
+				if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i]))) 
+					rand.advance(skipSingleCall);
+			}
             
-            //   get first chest
-            if(rand.nextInt(100) == 0) {
-            	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
-            	if ( chunk.contains(chest) ) {
-            		rand.advance(skipSingleCall);
-            		chests.add(new Pair<BPos, Long>(chest, rand.nextLong()));
-            	}
-            }
+			//   get first chest
+			if(rand.nextInt(100) == 0) {
+				chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
+				if ( chunk.contains(chest) ) {
+					rand.advance(skipSingleCall);
+					chests.add(new Pair<BPos, Long>(chest, rand.nextLong()));
+				}
+			}
             
             //   get second chest
             if(rand.nextInt(100) == 0) {
