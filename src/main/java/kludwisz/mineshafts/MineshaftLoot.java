@@ -222,7 +222,6 @@ public class MineshaftLoot
     }
     
     // simple example of use
-    
     public static void main() {
     	ArrayList<Pair<BPos, Long>> loot = new ArrayList<>();
         for (int seed=0; seed<100000000; seed++)
@@ -248,5 +247,21 @@ public class MineshaftLoot
         	}	
         }
     }
+	
+//	OUTPUT OF main()
+/*
+17173544 /tp 24 22 14     LOOT: [ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=5}, ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=9}, ItemStack{item=Item{name='iron_pickaxe', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='pumpkin_seeds', enchantments=[], effects=[]}, count=3}, ItemStack{item=Item{name='activator_rail', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='lapis_lazuli', enchantments=[], effects=[]}, count=9}]
+17173544 /tp 24 22 24     LOOT: [ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=8}, ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=20}, ItemStack{item=Item{name='iron_pickaxe', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='coal', enchantments=[], effects=[]}, count=7}]
+17173544 /tp 24 22 19     LOOT: [ItemStack{item=Item{name='golden_apple', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=18}, ItemStack{item=Item{name='bread', enchantments=[], effects=[]}, count=6}]
+30286839 /tp 17 14 -28     LOOT: [ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='name_tag', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='bread', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='activator_rail', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='coal', enchantments=[], effects=[]}, count=5}]
+30286839 /tp 17 14 -33     LOOT: [ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='name_tag', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='powered_rail', enchantments=[], effects=[]}, count=3}, ItemStack{item=Item{name='pumpkin_seeds', enchantments=[], effects=[]}, count=6}, ItemStack{item=Item{name='activator_rail', enchantments=[], effects=[]}, count=4}]
+30286839 /tp 15 14 -36     LOOT: [ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=8}, ItemStack{item=Item{name='name_tag', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='powered_rail', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='iron_ingot', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='bread', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='pumpkin_seeds', enchantments=[], effects=[]}, count=2}]
+33381225 /tp 19 18 -57     LOOT: [ItemStack{item=Item{name='gold_ingot', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='powered_rail', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='activator_rail', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='lapis_lazuli', enchantments=[], effects=[]}, count=5}]
+33381225 /tp 22 18 -55     LOOT: [ItemStack{item=Item{name='diamond', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=17}, ItemStack{item=Item{name='name_tag', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='pumpkin_seeds', enchantments=[], effects=[]}, count=3}, ItemStack{item=Item{name='melon_seeds', enchantments=[], effects=[]}, count=4}]
+33381225 /tp 14 18 -57     LOOT: [ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=16}, ItemStack{item=Item{name='detector_rail', enchantments=[], effects=[]}, count=3}, ItemStack{item=Item{name='bread', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='redstone', enchantments=[], effects=[]}, count=9}]
+82893363 /tp 30 39 -27     LOOT: [ItemStack{item=Item{name='gold_ingot', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=7}, ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=24}, ItemStack{item=Item{name='name_tag', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='redstone', enchantments=[], effects=[]}, count=9}]
+82893363 /tp 30 39 -32     LOOT: [ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=8}, ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=6}, ItemStack{item=Item{name='iron_pickaxe', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='pumpkin_seeds', enchantments=[], effects=[]}, count=6}, ItemStack{item=Item{name='activator_rail', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='melon_seeds', enchantments=[], effects=[]}, count=6}]
+82893363 /tp 30 39 -37     LOOT: [ItemStack{item=Item{name='enchanted_golden_apple', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='beetroot_seeds', enchantments=[], effects=[]}, count=4}, ItemStack{item=Item{name='rail', enchantments=[], effects=[]}, count=6}, ItemStack{item=Item{name='torch', enchantments=[], effects=[]}, count=2}, ItemStack{item=Item{name='detector_rail', enchantments=[], effects=[]}, count=1}, ItemStack{item=Item{name='bread', enchantments=[], effects=[]}, count=3}, ItemStack{item=Item{name='coal', enchantments=[], effects=[]}, count=8}, ItemStack{item=Item{name='lapis_lazuli', enchantments=[], effects=[]}, count=7}]
+*/
     
 }
