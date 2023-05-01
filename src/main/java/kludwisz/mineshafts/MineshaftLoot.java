@@ -23,8 +23,8 @@ public class MineshaftLoot
 	private static final LCG skipTorches = LCG.JAVA.combine(2);
 	private static final LCG skipSingleCall = LCG.JAVA.combine(1);
 	private static final ChunkRand rand = new ChunkRand();
-	private static ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
-	private static ArrayList<Corridor> corridors = new ArrayList<>();
+	public static ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
+	public static ArrayList<Corridor> corridors = new ArrayList<>();
 
 	// needs to be done in the same order as piece generation !
 	// returns chest positions and loot seeds (for use with the LootContext object)
