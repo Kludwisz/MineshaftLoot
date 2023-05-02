@@ -149,6 +149,7 @@ public class MineshaftLoot
         		if ( chunk.contains(CoordinateTransformer.getWorldPos(1, 0, j)) )
         			rand.advance(skipSingleCall);
         }
+    }
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions in a particular corridor
