@@ -28,12 +28,12 @@ public class MineshaftLoot
 
 	// needs to be done in the same order as piece generation !
 	// returns chest positions and loot seeds (for use with the LootContext object)
-	private static ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(Corridor c, BlockBox chunk, long structureSeed)
+	private static ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(Corridor c, BlockBox chunk)
 	{
 		if (c.hasCobwebs) {
 			// getting chest loot from spider corridors would require
 			// additional cobweb placement simulations, so here it's skipped
-			skipCallsInPieceInChunk(c, chunk, structureSeed);
+			skipCallsInPieceInChunk(c, chunk);
 			return new ArrayList<Pair<BPos, Long>>();
 		}
     	
@@ -97,7 +97,7 @@ public class MineshaftLoot
     
     // same as getChestsInPieceInChunk, but slightly faster (and also handles spider corridors
     // practically the same as getAllChestsInPieceInChunk, but here we just skip everything, so it's faster
-    private static void skipCallsInPieceInChunk(Corridor c, BlockBox chunk, long structureSeed) 
+    private static void skipCallsInPieceInChunk(Corridor c, BlockBox chunk) 
     {
         int m = c.length * 5;
         LCG skipCobwebs = LCG.JAVA.combine(m * 3 * 2);
@@ -152,7 +152,7 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions in a particular corridor
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(Corridor c, long structureSeed) 
+    public static ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(Corridor c, long worldSeed) 
     {
     	Set<CPos> pieceChunks = new HashSet<>();
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
@@ -172,16 +172,16 @@ public class MineshaftLoot
     	
     	// we need to process every chunk that contains our piece, in any order
     	for (CPos chunkPos : pieceChunks) {
-    		rand.setDecoratorSeed(structureSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, 0, 3, MCVersion.v1_16_1);
+    		rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, 0, 3, MCVersion.v1_16_1);
 	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     		
 	    	for (Corridor piece : corridors) {
 	    		if (piece.bb.contains(c.bb.getCenter()) && piece.bb.intersects(chunk)) {
-	    			chests.addAll( getChestsInPieceInChunk(piece, chunk, structureSeed) );
+	    			chests.addAll( getChestsInPieceInChunk(piece, chunk) );
 	    			break; // after proccessing the target piece part, we can move on
 	    		}
         		if (piece.bb.intersects(chunk))
-        			skipCallsInPieceInChunk(piece, chunk, structureSeed);
+        			skipCallsInPieceInChunk(piece, chunk);
         	}
     	}
     	
@@ -190,16 +190,16 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired chunk (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long structureSeed) 
+    public static ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) 
     {
-    	rand.setDecoratorSeed(structureSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, 0, 3, MCVersion.v1_16_1);
+    	rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, 0, 3, MCVersion.v1_16_1);
     	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
         
     	for (Corridor piece : corridors) {
     		if (piece.bb.intersects(chunk)) {
     	//		System.out.println("Piece processed: " + " rails: " + piece.hasRails + " cobwebs: " + piece.hasCobwebs + "   " + piece.bb);
-    			chests.addAll( getChestsInPieceInChunk(piece, chunk, structureSeed) );
+    			chests.addAll( getChestsInPieceInChunk(piece, chunk) );
     		}
     	}
     	
