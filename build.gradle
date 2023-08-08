@@ -1,10 +1,17 @@
 plugins {
     id 'java-library'
-    //id 'application'
+    id 'application'
     id 'maven-publish'
 }
 
-group = 'com.github.Kludwisz'
+def ENV = System.getenv()
+
+archivesBaseName = 'Kludwisz'
+group = 'Kludwisz'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 repositories {
     mavenCentral()
@@ -12,9 +19,9 @@ repositories {
     maven { url "https://www.jitpack.io" }
 }
 
-//application {
-//	mainClass = "kludwisz.mineshafts.Main"
-//}
+application {
+	mainClass = "kludwisz.mineshafts.Main"
+}
 
 dependencies {
     implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
@@ -27,3 +34,28 @@ dependencies {
     implementation('com.seedfinding:mc_feature:1.171.0') 	{ transitive = false }
 }
 
+// configure the maven publication
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = archivesBaseName
+            version = version
+            groupId = group
+
+            from components.java
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        if (ENV.MAVEN_URL) {
+            maven {
+                url ENV.MAVEN_URL
+                credentials {
+                    username ENV.MAVEN_USERNAME
+                    password ENV.MAVEN_PASSWORD
+                }
+            }
+        }
+    }
+}
