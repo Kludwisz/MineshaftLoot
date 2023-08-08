@@ -10,8 +10,8 @@ archivesBaseName = 'Kludwisz'
 group = 'Kludwisz'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_18
-targetCompatibility = JavaVersion.VERSION_18
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 repositories {
     mavenCentral()
@@ -32,6 +32,10 @@ dependencies {
 	implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
 	implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
     implementation('com.seedfinding:mc_feature:1.171.0') 	{ transitive = false }
+}
+
+java {
+    withSourcesJar()
 }
 
 // configure the maven publication
