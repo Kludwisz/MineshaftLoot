@@ -10,8 +10,8 @@ archivesBaseName = 'Kludwisz'
 group = 'Kludwisz'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_10
+targetCompatibility = JavaVersion.VERSION_10
 
 repositories {
     mavenCentral()
