@@ -8,6 +8,6 @@ Mineshaft generator by Gaider10
 Theoretical support: DylanDC14  
 
 # Installation
-Add the following line to your build.gradle:
+Add the following line to your build.gradle dependencies block:
 
 implementation('com.github.Kludwisz:MineshaftLoot:main-SNAPSHOT')
