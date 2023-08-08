@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'application'
+    //id 'application'
     id 'maven-publish'
 }
 
@@ -12,9 +12,9 @@ repositories {
     maven { url "https://www.jitpack.io" }
 }
 
-application {
-	mainClass = "kludwisz.mineshafts.Main"
-}
+//application {
+//	mainClass = "kludwisz.mineshafts.Main"
+//}
 
 dependencies {
     implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
