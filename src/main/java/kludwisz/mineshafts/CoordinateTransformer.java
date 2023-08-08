@@ -1,7 +1,7 @@
 package kludwisz.mineshafts;
 
-import kaptainwutax.mcutils.util.block.BlockBox;
-import kaptainwutax.mcutils.util.pos.BPos;
+import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mccore.util.pos.BPos;
 
 public class CoordinateTransformer 
 {

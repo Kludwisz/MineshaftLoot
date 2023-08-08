@@ -2,14 +2,13 @@ package kludwisz.mineshafts;
 
 import java.util.ArrayList;
 
-import kaptainwutax.mcutils.rand.ChunkRand;
-import kaptainwutax.seedutils.rand.JRand;
-import kaptainwutax.mcutils.util.block.BlockBox;
-import kaptainwutax.mcutils.version.MCVersion;
-
+import com.seedfinding.mccore.rand.ChunkRand;
+import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mccore.version.MCVersion;
+import com.seedfinding.mcseed.rand.JRand;
 
 public class MineshaftGenerator {
-   
+	
 	public static ArrayList<StructurePiece> generateForChunk(long worldSeed, int chunkX, int chunkZ, boolean mesa, ArrayList<Corridor> corridors) {
         ChunkRand rand = new ChunkRand();
         long s = rand.setCarverSeed(worldSeed, chunkX, chunkZ, MCVersion.v1_16_1);
@@ -49,9 +48,6 @@ public class MineshaftGenerator {
         for(StructurePiece structurePiece : children){
             structurePiece.translate(0, m, 0);
             if(structurePiece instanceof MineshaftCorridor){
-    //            int y = structurePiece.applyYTransform(0);
-    //            int x = structurePiece.applyXTransform(1, 2);
-    //            int z = structurePiece.applyZTransform(1, 2);
                 BlockBox bb = structurePiece.boundingBox;
                 int length;
                 if (structurePiece.facing.axis == Direction.Axis.Z) {

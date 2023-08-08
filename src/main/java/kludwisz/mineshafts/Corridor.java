@@ -1,6 +1,6 @@
 package kludwisz.mineshafts;
 
-import kaptainwutax.mcutils.util.block.BlockBox;
+import com.seedfinding.mccore.util.block.BlockBox;
 
 public class Corridor {
     public Direction direction;

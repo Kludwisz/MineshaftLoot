@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven { url "https://maven.seedfinding.com" }
+}
+
+application {
+	mainClass = "kludwisz.mineshafts.Main"
+}
+
+dependencies {
+    implementation('com.seedfinding:mc_feature:1.171.0')  { transitive = true }
+    implementation('com.seedfinding:mc_reversal:1.171.1') { transitive = false }
+}
+

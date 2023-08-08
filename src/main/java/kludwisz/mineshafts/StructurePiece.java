@@ -3,8 +3,8 @@ package kludwisz.mineshafts;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import kaptainwutax.seedutils.rand.JRand;
-import kaptainwutax.mcutils.util.block.BlockBox;
+import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mcseed.rand.JRand;
 
 public abstract class StructurePiece {
     public BlockBox boundingBox;
@@ -15,8 +15,7 @@ public abstract class StructurePiece {
         this.length = length;
     }
 
-    public void placeJigsaw(StructurePiece structurePiece, ArrayList<StructurePiece> list, JRand JRand) {
-    }
+    public abstract void placeJigsaw(StructurePiece structurePiece, ArrayList<StructurePiece> list, JRand JRand);
 
     public static StructurePiece getOverlappingPiece(ArrayList<StructurePiece> list, BlockBox blockBox) {
         Iterator<StructurePiece> var2 = list.iterator();
