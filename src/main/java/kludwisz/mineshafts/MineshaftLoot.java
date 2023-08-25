@@ -251,7 +251,7 @@ public class MineshaftLoot
         	List<ItemStack> items;
         	for (Pair<BPos, Long> p : loot) {
         		ctx = new LootContext(p.getSecond(), MCVersion.v1_16_1);
-        		items = MCLootTables.ABANDONED_MINESHAFT_CHEST.generate(ctx);
+        		items = MCLootTables.ABANDONED_MINESHAFT_CHEST.get().generate(ctx);
         		System.out.println(seed + " /tp " + p.getFirst().getX() + " "+ p.getFirst().getY() + " "+ p.getFirst().getZ() + "     LOOT: " + items);
         	}	
         }

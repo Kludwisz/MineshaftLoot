@@ -6,17 +6,26 @@ plugins {
 
 def ENV = System.getenv()
 
-archivesBaseName = 'Kludwisz'
-group = 'Kludwisz'
+archivesBaseName = 'kludwisz'
+group = 'kludwisz'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
-repositories {
-    mavenCentral()
-    maven { url "https://maven.seedfinding.com" }
-    maven { url "https://www.jitpack.io" }
+allprojects {
+    repositories {
+        mavenCentral()
+        maven{
+            url "https://jitpack.io"
+        }
+        maven {
+            url "https://maven.seedfinding.com/"
+        }
+        maven {
+            url "https://maven-snapshots.seedfinding.com/"
+        }
+    }
 }
 
 application {
@@ -31,11 +40,11 @@ dependencies {
     implementation('com.seedfinding:mc_reversal:1.171.1') 	{ transitive = false }
 	implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
 	implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
-    implementation('com.seedfinding:mc_feature:1.171.0') 	{ transitive = false }
+    implementation('com.seedfinding:mc_feature:1.171.5') 	{ transitive = false }
 }
 
 java {
-    withSourcesJar()
+	withSourcesJar()
 }
 
 // configure the maven publication
