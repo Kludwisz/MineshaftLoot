@@ -6,63 +6,52 @@ import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
+import kludwisz.mineshafts.util.Direction;
 
 public class MineshaftGenerator {
 	
-	public static ArrayList<StructurePiece> generateForChunk(long worldSeed, int chunkX, int chunkZ, boolean mesa, ArrayList<Corridor> corridors) {
+	public static boolean generateForChunk(long worldSeed, int chunkX, int chunkZ, boolean mesa, ArrayList<StructurePiece> pieces) {
         ChunkRand rand = new ChunkRand();
         long s = rand.setCarverSeed(worldSeed, chunkX, chunkZ, MCVersion.v1_16_1);
 
-        if(rand.nextDouble() < 0.004D) {
+        if (rand.nextDouble() < 0.004D) {
             rand.setSeed(s);
-            return generate((JRand)rand, chunkX, chunkZ, mesa, corridors);
+            generate(rand, chunkX, chunkZ, mesa, pieces);
+            return true;
         }
 
-        return new ArrayList<>();
+        return false;
     }
 
-    public static ArrayList<StructurePiece> generate(JRand rand, int chunkX, int chunkZ, boolean mesa, ArrayList<Corridor> corridors) {
-        ArrayList<StructurePiece> children = new ArrayList<>();
+    public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, ArrayList<StructurePiece> pieces) {
+        //ArrayList<StructurePiece> children = new ArrayList<>();
         
         MineshaftGenerator.MineshaftRoom mineshaftRoom = new MineshaftGenerator.MineshaftRoom(0, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
-        children.add(mineshaftRoom);
-        mineshaftRoom.placeJigsaw(mineshaftRoom, children, rand);
+        pieces.add(mineshaftRoom);
+        mineshaftRoom.placeJigsaw(mineshaftRoom, pieces, rand);
 
         BlockBox boundingBox = BlockBox.empty();
-        for(StructurePiece structurePiece : children){
+        for (StructurePiece structurePiece : pieces) {
             boundingBox.encompass(structurePiece.boundingBox);
         }
 
         int m;
-        
-        if(mesa) {
+        if (mesa) {
             m = 63 - boundingBox.maxY + boundingBox.getYSpan() / 2 + 5;
-        } else {
+        }
+        else {
             int l = boundingBox.getYSpan() + 1;
             if (l < 53) l += rand.nextInt(53 - l);
             m = l - boundingBox.maxY;
         }
-
         boundingBox.offset(0, m, 0);
 
-        for(StructurePiece structurePiece : children){
+        for (StructurePiece structurePiece : pieces) {
             structurePiece.translate(0, m, 0);
-            if(structurePiece instanceof MineshaftCorridor){
-                BlockBox bb = structurePiece.boundingBox;
-                int length;
-                if (structurePiece.facing.axis == Direction.Axis.Z) {
-                    length = structurePiece.boundingBox.getZSpan()/5;
-                } else {
-                    length = structurePiece.boundingBox.getXSpan()/5;
-                }
-                corridors.add(new Corridor(length, structurePiece.facing, bb, ((MineshaftCorridor)structurePiece).hasCobwebs, ((MineshaftCorridor)structurePiece).hasRails));
-            }
         }
-
-        return children;
     }
 
-    public static StructurePiece getJRandJigsaw(ArrayList<StructurePiece> ArrayList, JRand rand, int i, int j, int k, Direction direction, int l) {
+    public static StructurePiece getRandomJigsaw(ArrayList<StructurePiece> ArrayList, JRand rand, int i, int j, int k, Direction direction, int l) {
         int m = rand.nextInt(100);
         BlockBox blockBox2;
         if (m >= 80) {
@@ -87,7 +76,7 @@ public class MineshaftGenerator {
 
     private static void tryGenerateJigsaw(StructurePiece structurePiece, ArrayList<StructurePiece> ArrayList, JRand rand, int i, int j, int k, Direction direction, int l) {
         if (l <= 8 && Math.abs(i - structurePiece.boundingBox.minX) <= 80 && Math.abs(k - structurePiece.boundingBox.minZ) <= 80) {
-            StructurePiece mineshaftPart = getJRandJigsaw(ArrayList, rand, i, j, k, direction, l + 1);
+            StructurePiece mineshaftPart = getRandomJigsaw(ArrayList, rand, i, j, k, direction, l + 1);
             if (mineshaftPart != null) {
                 ArrayList.add(mineshaftPart);
                 mineshaftPart.placeJigsaw(structurePiece, ArrayList, rand);
@@ -238,9 +227,11 @@ public class MineshaftGenerator {
     public static class MineshaftCorridor extends StructurePiece {
         public boolean hasCobwebs;
         public boolean hasRails;
+        public int numSegments;
 
         public MineshaftCorridor(int i, JRand rand, BlockBox blockBox, Direction direction) {
             super(i);
+            numSegments = i / 5;
             facing = direction;
             boundingBox = blockBox;
             hasRails = rand.nextInt(3) == 0;

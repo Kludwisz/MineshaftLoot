@@ -1,2 +1,4 @@
 jdk:
   - openjdk17
+artifacts:
+  - path: build/libs/*.jar
