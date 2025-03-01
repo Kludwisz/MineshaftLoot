@@ -62,7 +62,7 @@ public class CoordinateTransformer
     }
 	
 	// mineshaft-specific, not for general use
-	public static final boolean isSupportingBox(int relativeZ, BlockBox chunk) {
+	public static boolean isSupportingBox(int relativeZ, BlockBox chunk) {
 		for (int relativeX=0; relativeX<=2; relativeX++) {
 			if (!chunk.contains(getWorldPos(relativeX, 3, relativeZ)))
 				return false;

@@ -1,74 +1,45 @@
 plugins {
     id 'java'
-    id 'application'
     id 'maven-publish'
 }
 
-def ENV = System.getenv()
+group = 'com.github.kludwisz'
+version '1.3'
 
-archivesBaseName = 'kludwisz'
-group = 'kludwisz'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
-
-allprojects {
-    repositories {
-        mavenCentral()
-        maven{
-            url "https://jitpack.io"
-        }
-        maven {
-            url "https://maven.seedfinding.com/"
-        }
-        maven {
-            url "https://maven-snapshots.seedfinding.com/"
-        }
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
-application {
-	mainClass = "kludwisz.mineshafts.Main"
+repositories {
+    mavenCentral()
+    maven { url "https://maven.seedfinding.com/" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
     implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
     implementation('com.seedfinding:mc_seed:1.171.1') 		{ transitive = false }
-    implementation('com.seedfinding:mc_core:1.192.1') 		{ transitive = false }
+    implementation('com.seedfinding:mc_core:1.210.0') 		{ transitive = false }
     implementation('com.seedfinding:mc_noise:1.171.1') 		{ transitive = false }
     implementation('com.seedfinding:mc_reversal:1.171.1') 	{ transitive = false }
 	implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
 	implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
-    implementation('com.seedfinding:mc_feature:1.171.5') 	{ transitive = false }
-}
+    implementation('com.seedfinding:mc_feature:1.171.9') 	{ transitive = false }
 
-java {
-	withSourcesJar()
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
 }
 
 // configure the maven publication
 publishing {
     publications {
         maven(MavenPublication) {
-            artifactId = archivesBaseName
-            version = version
-            groupId = group
-
             from components.java
         }
     }
+}
 
-    // select the repositories you want to publish to
-    repositories {
-        if (ENV.MAVEN_URL) {
-            maven {
-                url ENV.MAVEN_URL
-                credentials {
-                    username ENV.MAVEN_USERNAME
-                    password ENV.MAVEN_PASSWORD
-                }
-            }
-        }
-    }
+test {
+    useJUnitPlatform()
 }

@@ -231,7 +231,7 @@ public class MineshaftGenerator {
 
         public MineshaftCorridor(int i, JRand rand, BlockBox blockBox, Direction direction) {
             super(i);
-            numSegments = i / 5;
+            numSegments = blockBox.getXSpan() > blockBox.getZSpan() ? blockBox.getXSpan() / 5 : blockBox.getZSpan() / 5;
             facing = direction;
             boundingBox = blockBox;
             hasRails = rand.nextInt(3) == 0;
