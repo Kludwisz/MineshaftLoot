@@ -2,8 +2,8 @@ import com.seedfinding.mccore.util.math.Vec3i;
 import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import kludwisz.mineshafts.MineshaftLoot;
-import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExamplesToTest {
