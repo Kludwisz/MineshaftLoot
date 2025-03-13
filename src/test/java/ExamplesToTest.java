@@ -77,6 +77,29 @@ public class ExamplesToTest {
         // Spider corridor at /tp @p 6146 65 -371
     }
 
+    /**
+     * Example of use: getting all the positions of minecart chests in a given chunk,
+     * MC version 1.21.4
+     */
+    @Test
+    public void getLootInChunkRecentVersion() {
+        final MCVersion version = MCVersion.v1_21;
+        final long worldSeed = 123456789L;
+        final CPos mineshaftStartChunk = new CPos(3, -20);
+        final CPos chestChunk = new CPos(3,-23);
+        MineshaftLoot ml = new MineshaftLoot(version);
+
+        assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));
+
+        ml.getAllChestsInChunk(chestChunk, worldSeed).forEach(pair -> {
+            System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
+        });
+
+        // output:
+        // Chest at Pos{x=54, y=27, z=-355}, loot seed 7460246627384350961
+        // Chest at Pos{x=61, y=32, z=-366}, loot seed -7222143982153524434L
+    }
+
     private String tpCommand(Vec3i pos) {
         return "/tp @p " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
     }
