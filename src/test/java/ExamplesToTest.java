@@ -17,10 +17,11 @@ public class ExamplesToTest {
         final long worldSeed = 1234321L;
         final CPos mineshaftStartChunk = new CPos(3, -20);
         final CPos chestChunk = new CPos(3,-23);
+        MineshaftLoot ml = new MineshaftLoot(version);
 
-        assertTrue(MineshaftLoot.generateMineshaft(worldSeed, mineshaftStartChunk, false));
+        assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));
 
-        MineshaftLoot.getAllChestsInChunk(chestChunk, worldSeed, version).forEach(pair -> {
+        ml.getAllChestsInChunk(chestChunk, worldSeed).forEach(pair -> {
             System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
         });
 
@@ -38,10 +39,11 @@ public class ExamplesToTest {
         final MCVersion version = MCVersion.v1_17_1;
         final long worldSeed = 1234321L;
         final CPos mineshaftStartChunk = new CPos(385, -23);
+        MineshaftLoot ml = new MineshaftLoot(version);
 
-        assertTrue(MineshaftLoot.generateMineshaft(worldSeed, mineshaftStartChunk, true));
+        assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, true));
 
-        MineshaftLoot.getAllChests(worldSeed)
+        ml.getAllChests(worldSeed)
                 .forEach(pair -> {
                     System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
                 });
@@ -59,10 +61,11 @@ public class ExamplesToTest {
     public void getSpiderCorridors() {
         final long worldSeed = 1234321L;
         final CPos mineshaftStartChunk = new CPos(385, -23);
+        MineshaftLoot ml = new MineshaftLoot(MCVersion.v1_17_1);
 
-        assertTrue(MineshaftLoot.generateMineshaft(worldSeed, mineshaftStartChunk, true));
+        assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, true));
 
-        MineshaftLoot.getCorridors().forEach(corridor -> {
+        ml.getCorridors().forEach(corridor -> {
             if (corridor.hasCobwebs) {
                 System.out.println("Spider corridor at " + tpCommand(corridor.boundingBox.getCenter()));
             }

@@ -17,18 +17,27 @@ import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
 
 public class MineshaftLoot 
 {
+	public static final int DECORATION_SALT = 30000;
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
 
-    private static WorldgenRandom rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
+    private final WorldgenRandom rand;
+    private final ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
+    private final ArrayList<MineshaftCorridor> corridors = new ArrayList<>();
 
-    private static final ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
-    private static final ArrayList<MineshaftCorridor> corridors = new ArrayList<>();
+	public MineshaftLoot(MCVersion version) {
+		if (version.isNewerOrEqualTo(MCVersion.v1_18)) {
+			rand = new WorldgenRandom(WorldgenRandom.Type.XOROSHIRO);
+		}
+		else {
+			rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
+		}
+	}
 
-	public static int DECORATION_SALT = 30000;
+	// ------------------------------------------------------------------------------
 
     // needs to be done in the same order as piece generation !
     // returns chest positions and loot seeds (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
+    public ArrayList<Pair<BPos, Long>> getChestsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
     	if (c.hasCobwebs) {
     		// getting chest loot from spider corridors would require
     		// additional cobweb placement simulations, so here it's skipped
@@ -93,7 +102,7 @@ public class MineshaftLoot
     
     // same as getChestsInPieceInChunk, but slightly faster (and also handles spider corridors
     // practically the same as getAllChestsInPieceInChunk, but here we just skip everything, so it's faster
-    public static void skipCallsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
+    public void skipCallsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
         int m = c.length * 5;
         rand.skip(m * 3); // ceiling air
         
@@ -143,7 +152,7 @@ public class MineshaftLoot
         }
     }
 
-	public static ArrayList<CPos> getPieceChunks(StructurePiece piece) {
+	public ArrayList<CPos> getPieceChunks(StructurePiece piece) {
 		ArrayList<CPos> pieceChunks = new ArrayList<>();
 
 		// the piece spans all chunk positions from its min corner to its max corner
@@ -161,12 +170,12 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired corridor piece (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(MineshaftCorridor c, long worldSeed) {
+    public ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(MineshaftCorridor c, long worldSeed) {
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
     	
     	// we need to process every chunk that contains our piece, in any order
     	for (CPos chunkPos : getPieceChunks(c)) {
-    		rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT);
+    		rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), DECORATION_SALT);
 	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     		
 	    	for (MineshaftCorridor piece : corridors) {
@@ -184,8 +193,8 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired chunk (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) {
-    	rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT);
+    public ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) {
+    	rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), DECORATION_SALT);
     	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
         
@@ -199,7 +208,7 @@ public class MineshaftLoot
     	return chests;
     }
 
-	public static ArrayList<Pair<BPos, Long>> getAllChests(long worldSeed) {
+	public ArrayList<Pair<BPos, Long>> getAllChests(long worldSeed) {
 		ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
 
 		// doing this chunk-wise should be faster than piece-wise
@@ -216,25 +225,11 @@ public class MineshaftLoot
 		return chests;
 	}
 
-	public static void setVersion(MCVersion version) {
-		if (version.isNewerOrEqualTo(MCVersion.v1_18)) {
-			rand = new WorldgenRandom(WorldgenRandom.Type.XOROSHIRO);
-		}
-		else {
-			rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
-		}
-	}
-
-    @Deprecated
-    public static boolean generateMineshaft(CPos chunkPos, long structureSeed, boolean mesa) {
-    	return generateMineshaft(structureSeed, chunkPos, mesa, false);
-    }
-
-	public static boolean generateMineshaft(long structureSeed, CPos chunkPos, boolean mesa) {
+	public boolean generateMineshaft(long structureSeed, CPos chunkPos, boolean mesa) {
 		return generateMineshaft(structureSeed, chunkPos, mesa, false);
 	}
 
-	public static boolean generateMineshaft(long structureSeed, CPos chunkPos, boolean mesa, boolean skipCorridors) {
+	public boolean generateMineshaft(long structureSeed, CPos chunkPos, boolean mesa, boolean skipCorridors) {
 		mineshaftPieces.clear();
 		boolean generates = MineshaftGenerator.generateForChunk(structureSeed, chunkPos.getX(), chunkPos.getZ(), mesa, mineshaftPieces);
 		if (!generates)
@@ -254,11 +249,11 @@ public class MineshaftLoot
 
     // getters for the corridor and piece lists
 
-    public static List<MineshaftCorridor> getCorridors() {
+    public List<MineshaftCorridor> getCorridors() {
     	return corridors;
     }
     
-    public static List<StructurePiece> getPieces() {
+    public List<StructurePiece> getPieces() {
     	return mineshaftPieces;
     }
 }
