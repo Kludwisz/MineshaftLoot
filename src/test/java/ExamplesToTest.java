@@ -85,8 +85,8 @@ public class ExamplesToTest {
     public void getLootInChunkRecentVersion() {
         final MCVersion version = MCVersion.v1_21;
         final long worldSeed = 123456789L;
-        final CPos mineshaftStartChunk = new CPos(3, -20);
-        final CPos chestChunk = new CPos(3,-23);
+        final CPos mineshaftStartChunk = new CPos(7, 18);
+        final CPos chestChunk = new CPos(7,17);
         MineshaftLoot ml = new MineshaftLoot(version);
 
         assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));

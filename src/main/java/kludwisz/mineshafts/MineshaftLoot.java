@@ -239,7 +239,7 @@ public class MineshaftLoot
 		long s = carverRand.setCarverSeed(structureSeed, cx, cz, MCVersion.v1_16_1);
 
 		if (carverRand.nextDouble() < 0.004D) {
-			rand.setSeed(s);
+			carverRand.setSeed(s);
 			MineshaftGenerator.generate(carverRand, cx, cz, mesa, mineshaftPieces);
 		}
 		else {
