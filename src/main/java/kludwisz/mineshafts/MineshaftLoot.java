@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.util.data.Pair;
 import com.seedfinding.mccore.util.pos.BPos;
@@ -21,6 +22,7 @@ public class MineshaftLoot
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
 
     private final WorldgenRandom rand;
+	private final ChunkRand carverRand = new ChunkRand();
     private final ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
     private final ArrayList<MineshaftCorridor> corridors = new ArrayList<>();
 
@@ -231,9 +233,18 @@ public class MineshaftLoot
 
 	public boolean generateMineshaft(long structureSeed, CPos chunkPos, boolean mesa, boolean skipCorridors) {
 		mineshaftPieces.clear();
-		boolean generates = MineshaftGenerator.generateForChunk(structureSeed, chunkPos.getX(), chunkPos.getZ(), mesa, mineshaftPieces);
-		if (!generates)
+
+		int cx = chunkPos.getX();
+		int cz = chunkPos.getZ();
+		long s = carverRand.setCarverSeed(structureSeed, cx, cz, MCVersion.v1_16_1);
+
+		if (carverRand.nextDouble() < 0.004D) {
+			rand.setSeed(s);
+			MineshaftGenerator.generate(carverRand, cx, cz, mesa, mineshaftPieces);
+		}
+		else {
 			return false;
+		}
 
 		if (!skipCorridors) {
 			corridors.clear();

@@ -9,19 +9,6 @@ import com.seedfinding.mcseed.rand.JRand;
 import kludwisz.mineshafts.util.Direction;
 
 public class MineshaftGenerator {
-	public static boolean generateForChunk(long worldSeed, int chunkX, int chunkZ, boolean mesa, ArrayList<StructurePiece> pieces) {
-        ChunkRand rand = new ChunkRand();
-        long s = rand.setCarverSeed(worldSeed, chunkX, chunkZ, MCVersion.v1_16_1);
-
-        if (rand.nextDouble() < 0.004D) {
-            rand.setSeed(s);
-            generate(rand, chunkX, chunkZ, mesa, pieces);
-            return true;
-        }
-
-        return false;
-    }
-
     public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, ArrayList<StructurePiece> pieces) {
         //ArrayList<StructurePiece> children = new ArrayList<>();
         
