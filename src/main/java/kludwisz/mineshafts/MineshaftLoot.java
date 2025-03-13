@@ -18,20 +18,27 @@ import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
 
 public class MineshaftLoot 
 {
-	public static final int DECORATION_SALT = 30000;
+	public static final int DECORATION_SALT_1_16 = 30000;
+	public static final int DECORATION_SALT_1_21 = 20002;
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
 
+	private final MCVersion version;
+	private final int decorationSalt;
     private final WorldgenRandom rand;
 	private final ChunkRand carverRand = new ChunkRand();
     private final ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
     private final ArrayList<MineshaftCorridor> corridors = new ArrayList<>();
 
 	public MineshaftLoot(MCVersion version) {
+		this.version = version;
+
 		if (version.isNewerOrEqualTo(MCVersion.v1_18)) {
 			rand = new WorldgenRandom(WorldgenRandom.Type.XOROSHIRO);
+			decorationSalt = DECORATION_SALT_1_21;
 		}
 		else {
 			rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
+			decorationSalt = DECORATION_SALT_1_16;
 		}
 	}
 
@@ -177,7 +184,7 @@ public class MineshaftLoot
     	
     	// we need to process every chunk that contains our piece, in any order
     	for (CPos chunkPos : getPieceChunks(c)) {
-    		rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), DECORATION_SALT);
+    		rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), decorationSalt);
 	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     		
 	    	for (MineshaftCorridor piece : corridors) {
@@ -196,7 +203,7 @@ public class MineshaftLoot
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired chunk (for use with the LootContext object)
     public ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) {
-    	rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), DECORATION_SALT);
+    	rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), decorationSalt);
     	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
         
@@ -239,7 +246,8 @@ public class MineshaftLoot
 		long s = carverRand.setCarverSeed(structureSeed, cx, cz, MCVersion.v1_16_1);
 
 		if (carverRand.nextDouble() < 0.004D) {
-			carverRand.setSeed(s);
+			if (version.isOlderThan(MCVersion.v1_18)) // TODO verify
+				carverRand.setSeed(s);
 			MineshaftGenerator.generate(carverRand, cx, cz, mesa, mineshaftPieces);
 		}
 		else {
