@@ -4,24 +4,22 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.util.data.Pair;
 import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.util.pos.CPos;
-import com.seedfinding.mccore.version.MCVersion;
-import com.seedfinding.mcseed.lcg.LCG;
 
+import com.seedfinding.mccore.version.MCVersion;
 import kludwisz.mineshafts.util.CoordinateTransformer;
+import kludwisz.rng.WorldgenRandom;
+
 import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
 
 public class MineshaftLoot 
 {
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
-	private static final LCG skipChest = LCG.JAVA.combine(3);
-	private static final LCG skipTorches = LCG.JAVA.combine(2);
-    private static final LCG skipSingleCall = LCG.JAVA.combine(1);
-    private static final ChunkRand rand = new ChunkRand().asChunkRandDebugger();
+
+    private static WorldgenRandom rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
 
     private static final ArrayList<StructurePiece> mineshaftPieces = new ArrayList<>();
     private static final ArrayList<MineshaftCorridor> corridors = new ArrayList<>();
@@ -39,12 +37,9 @@ public class MineshaftLoot
     	}
     	
     	int m = c.numSegments * 5;
-        LCG skipCeiling = LCG.JAVA.combine(m * 3L);
-        ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
+		rand.skip(m * 3); // skip ceiling air blocks
 
-		//   skip ceiling air blocks
-        rand.advance(skipCeiling);
-        
+        ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
         CoordinateTransformer.setParams(c.facing, c.boundingBox);
         BPos chest;
         int center;
@@ -57,21 +52,21 @@ public class MineshaftLoot
         	//   for supports, we also need an extra isSupportingBox method (defined in CoordinateTransformer)
         	if (CoordinateTransformer.isSupportingBox(center, chunk)) {
         		if (rand.nextInt(4) != 0) {
-                    rand.advance(skipTorches);
+                    rand.skip(2);
                 }
         	}
             
         	//   cobwebs
             for (int i=0; i<8; i++) {
             	if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
-            		rand.advance(skipSingleCall);
+            		rand.nextSeed();
             }
             
             //   get first chest
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
             	if ( chunk.contains(chest) ) {
-            		rand.advance(skipSingleCall);
+            		rand.nextSeed();
             		chests.add(new Pair<>(chest, rand.nextLong()));
             	}
             }
@@ -80,7 +75,7 @@ public class MineshaftLoot
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
             	if ( chunk.contains(chest) ) {
-            		rand.advance(skipSingleCall);
+            		rand.nextSeed();
             		chests.add(new Pair<>(chest, rand.nextLong()));
             	}
             }
@@ -90,7 +85,7 @@ public class MineshaftLoot
         if (c.hasRails) {
         	for (int j=0; j<m; j++)
         		if ( chunk.contains(CoordinateTransformer.getWorldPos(1, 0, j)) )
-        			rand.advance(skipSingleCall);
+        			rand.nextSeed();
         }
         
         return chests;
@@ -100,14 +95,11 @@ public class MineshaftLoot
     // practically the same as getAllChestsInPieceInChunk, but here we just skip everything, so it's faster
     public static void skipCallsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
         int m = c.length * 5;
-        LCG skipCobwebs = LCG.JAVA.combine(m * 3L * 2L);
-        LCG skipCeiling = LCG.JAVA.combine(m * 3L);
-
-        rand.advance(skipCeiling);
+        rand.skip(m * 3); // ceiling air
         
-        //   if spawner corridor, skip cobwebs as well
+        // if spawner corridor, skip cobwebs as well
         if (c.hasCobwebs)
-        	rand.advance(skipCobwebs);
+        	rand.skip(m * 6);
         
         CoordinateTransformer.setParams(c.facing, c.boundingBox);
         BPos chest;
@@ -119,35 +111,35 @@ public class MineshaftLoot
         	
         	if (CoordinateTransformer.isSupportingBox(center, chunk)) {
 	            if(rand.nextInt(4) != 0) {
-	                rand.advance(skipTorches);
+	                rand.skip(2);
 	            }
         	}
 
             for (int i=0; i<8; i++) {
             	if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i]))) 
-            		rand.advance(skipSingleCall);
+            		rand.nextSeed();
             }
             
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
             	if ( chunk.contains(chest) )
-            		rand.advance(skipChest);
+            		rand.skip(3);
             }
             
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
             	if ( chunk.contains(chest) )
-            		rand.advance(skipChest);
+            		rand.skip(3);
             }
             
             if (c.hasCobwebs && !spiderSpawnerPlaced)
-            	rand.advance(skipSingleCall);
+            	rand.nextSeed();
         }
         
         if (c.hasRails) {
         	for (int j=0; j<m; j++)
         		if ( chunk.contains(CoordinateTransformer.getWorldPos(1, 0, j)) )
-        			rand.advance(skipSingleCall);
+        			rand.nextSeed();
         }
     }
 
@@ -169,12 +161,12 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired corridor piece (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(MineshaftCorridor c, long worldSeed, MCVersion version) {
+    public static ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(MineshaftCorridor c, long worldSeed) {
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
     	
     	// we need to process every chunk that contains our piece, in any order
     	for (CPos chunkPos : getPieceChunks(c)) {
-    		rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT, version);
+    		rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT);
 	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     		
 	    	for (MineshaftCorridor piece : corridors) {
@@ -192,8 +184,8 @@ public class MineshaftLoot
     
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired chunk (for use with the LootContext object)
-    public static ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed, MCVersion version) {
-    	rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT, version);
+    public static ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) {
+    	rand.setDecoratorSeed(worldSeed, chunkPos.getX() << 4, chunkPos.getZ() << 4, DECORATION_SALT);
     	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
         
@@ -207,7 +199,7 @@ public class MineshaftLoot
     	return chests;
     }
 
-	public static ArrayList<Pair<BPos, Long>> getAllChests(long worldSeed, MCVersion version) {
+	public static ArrayList<Pair<BPos, Long>> getAllChests(long worldSeed) {
 		ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
 
 		// doing this chunk-wise should be faster than piece-wise
@@ -216,14 +208,23 @@ public class MineshaftLoot
 			ArrayList<CPos> pieceChunks = getPieceChunks(corridor);
 			for (CPos chunkPos : pieceChunks) {
 				if (checkedChunks.add(chunkPos)) {
-					chests.addAll(getAllChestsInChunk(chunkPos, worldSeed, version));
+					chests.addAll(getAllChestsInChunk(chunkPos, worldSeed));
 				}
 			}
 		}
 
 		return chests;
 	}
-    
+
+	public static void setVersion(MCVersion version) {
+		if (version.isNewerOrEqualTo(MCVersion.v1_18)) {
+			rand = new WorldgenRandom(WorldgenRandom.Type.XOROSHIRO);
+		}
+		else {
+			rand = new WorldgenRandom(WorldgenRandom.Type.JAVA);
+		}
+	}
+
     @Deprecated
     public static boolean generateMineshaft(CPos chunkPos, long structureSeed, boolean mesa) {
     	return generateMineshaft(structureSeed, chunkPos, mesa, false);

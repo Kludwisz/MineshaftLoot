@@ -41,7 +41,7 @@ public class ExamplesToTest {
 
         assertTrue(MineshaftLoot.generateMineshaft(worldSeed, mineshaftStartChunk, true));
 
-        MineshaftLoot.getAllChests(worldSeed, version)
+        MineshaftLoot.getAllChests(worldSeed)
                 .forEach(pair -> {
                     System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
                 });
