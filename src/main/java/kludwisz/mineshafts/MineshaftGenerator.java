@@ -2,9 +2,7 @@ package kludwisz.mineshafts;
 
 import java.util.ArrayList;
 
-import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.util.block.BlockBox;
-import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
 import kludwisz.mineshafts.util.Direction;
 
