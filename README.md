@@ -1,7 +1,9 @@
 # MineshaftLoot
 
-Repo for generating mineshafts and simulating mineshaft decoration features (pre 1.18 only) such as chest loot, cobwebs, etc.  
+Repo for generating mineshafts and simulating mineshaft decoration features such as chest loot, cobwebs, etc.  
 The code doesn't take lava lakes, water lakes, and caves into account, so the results aren't always accurate.
+Tested in MC JE 1.17.1 and MC JE 1.21.4.
+
 Requires seedfinding libraries by Neil and Kaptainwutax to run (https://github.com/SeedFinding).
 
 Mineshaft generator by Gaider10  
@@ -26,6 +28,6 @@ dependencies {
     implementation('com.seedfinding:mc_terrain:1.171.1') { transitive = false }
     implementation('com.seedfinding:mc_feature:1.171.9') { transitive = false }
 	
-    implementation('com.github.kludwisz:MineshaftLoot:1.3')
+    implementation('com.github.kludwisz:MineshaftLoot:1.5')
 }
 ```
