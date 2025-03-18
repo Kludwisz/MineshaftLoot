@@ -235,6 +235,7 @@ public class MineshaftGenerator {
 
     public static class MineshaftCorridor extends StructurePiece {
         public boolean hasCobwebs;
+        public BPos spiderSpawner;
         public boolean hasRails;
         public int numSegments;
 
@@ -245,6 +246,7 @@ public class MineshaftGenerator {
             boundingBox = blockBox;
             hasRails = rand.nextInt(3) == 0;
             hasCobwebs = !hasRails && rand.nextInt(23) == 0;
+            spiderSpawner = null;
         }
 
         public static BlockBox getBoundingBox(ArrayList<StructurePiece> pieceList, JRand rand, int i, int j, int k, BlockDirection direction) {

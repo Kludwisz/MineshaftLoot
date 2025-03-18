@@ -25,12 +25,12 @@ public class XoroshiroRandomSource implements RandomSource {
 
 	@Override
 	public void nextSeed() {
-		this.nextLong();
+		this.nextLongX();
 	}
 
 	@Override
 	public int nextBits(int bits) {
-		return (int)(this.nextLong() >>> (64 - bits));
+		return (int)(this.nextLongX() >>> (64 - bits));
 	}
 
 	@Override
@@ -46,12 +46,12 @@ public class XoroshiroRandomSource implements RandomSource {
 	@Override
 	public void skip(int states) {
 		for (int i = 0; i < states; i++)
-			this.nextLong();
+			this.nextLongX();
 	}
 
 	// -----------------------------------------------------
 
-	private long nextLong() {
+	private long nextLongX() {
 		long l = this.lo;
 		long h = this.hi;
 		long res = Long.rotateLeft(l + h, 17) + l;

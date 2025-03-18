@@ -151,8 +151,13 @@ public class MineshaftLoot
             		rand.skip(3);
             }
             
-            if (c.hasCobwebs && !spiderSpawnerPlaced)
-            	rand.nextSeed();
+            if (c.hasCobwebs && c.spiderSpawner == null) {
+				int l = center - 1 + rand.nextInt(3);
+				BPos spawnerPos = CoordinateTransformer.getWorldPos(1, 0, l);
+				if (chunk.contains(spawnerPos)) {
+					c.spiderSpawner = spawnerPos;
+				}
+			}
         }
         
         if (c.hasRails) {
