@@ -95,7 +95,7 @@ public class ExamplesToTest {
             }
         });
 
-        // output (height is incorrect):
+        // output:
         // Spider corridor at /tp @p 1003 28 1383
         // Spider corridor at /tp @p 1015 24 1347
         // Spider corridor at /tp @p 1009 23 1330

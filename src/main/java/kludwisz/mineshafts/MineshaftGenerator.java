@@ -3,11 +3,12 @@ package kludwisz.mineshafts;
 import java.util.ArrayList;
 
 import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
 import kludwisz.mineshafts.util.Direction;
 
 public class MineshaftGenerator {
-    public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, ArrayList<StructurePiece> pieces) {
+    public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, MCVersion version, ArrayList<StructurePiece> pieces) {
         //ArrayList<StructurePiece> children = new ArrayList<>();
         
         MineshaftGenerator.MineshaftRoom mineshaftRoom = new MineshaftGenerator.MineshaftRoom(0, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
@@ -19,20 +20,40 @@ public class MineshaftGenerator {
             boundingBox.encompass(structurePiece.boundingBox);
         }
 
-        int m;
-        if (mesa) {
-            m = 63 - boundingBox.maxY + boundingBox.getYSpan() / 2 + 5;
-        }
-        else {
-            int l = boundingBox.getYSpan() + 1;
-            if (l < 53) l += rand.nextInt(53 - l);
-            m = l - boundingBox.maxY;
-        }
+        int m = getYOffset(boundingBox, mesa, version, rand);
+
         boundingBox.offset(0, m, 0);
 
         for (StructurePiece structurePiece : pieces) {
             structurePiece.translate(0, m, 0);
         }
+    }
+
+    private static int getYOffset(BlockBox boundingBox, boolean mesa, MCVersion version, JRand rand) {
+        int m;
+
+        if (version.isOlderThan(MCVersion.v1_18)) {
+            if (mesa) {
+                m = 63 - boundingBox.maxY + boundingBox.getYSpan() / 2 + 5;
+            }
+            else {
+                int l = boundingBox.getYSpan() + 1;
+                if (l < 53) l += rand.nextInt(53 - l);
+                m = l - boundingBox.maxY;
+            }
+        }
+        else {
+            if (mesa) {
+                return 63; // in reality, this is heightmap-based, this value is just a placeholder
+            }
+            else {
+                int l = boundingBox.getYSpan() + (-64) + 1;
+                if (l < 53) l += rand.nextInt(53 - l);
+                m = l - boundingBox.maxY;
+            }
+        }
+
+        return m;
     }
 
     public static StructurePiece getRandomJigsaw(ArrayList<StructurePiece> pieceList, JRand rand, int i, int j, int k, Direction direction, int l) {
