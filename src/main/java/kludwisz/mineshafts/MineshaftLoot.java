@@ -20,7 +20,7 @@ import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
 public class MineshaftLoot 
 {
 	public static final int DECORATION_SALT_1_16 = 30000;
-	public static final int DECORATION_SALT_1_21 = 20002;
+	public static int DECORATION_SALT_1_21 = 30001;
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
 
 	private final MCVersion version;
@@ -82,6 +82,8 @@ public class MineshaftLoot
             }
             
             //   get first chest
+			//System.out.println("First chest for corridor " + c.boundingBox.getCenter() + " at " + CoordinateTransformer.getWorldPos(2, 0, center-1));
+			//System.out.println("Current PRNG state: " + rand.getState());
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
             	if ( chunk.contains(chest) ) {
@@ -91,6 +93,8 @@ public class MineshaftLoot
             }
             
             //   get second chest
+			//System.out.println("Second chest for corridor " + c.boundingBox.getCenter() + " at " + CoordinateTransformer.getWorldPos(2, 0, center-1));
+			//System.out.println("Current PRNG state: " + rand.getState());
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
             	if ( chunk.contains(chest) ) {
@@ -150,14 +154,17 @@ public class MineshaftLoot
             	if ( chunk.contains(chest) )
             		rand.skip(3);
             }
-            
-            if (c.hasCobwebs && c.spiderSpawner == null) {
-				int l = center - 1 + rand.nextInt(3);
-				BPos spawnerPos = CoordinateTransformer.getWorldPos(1, 0, l);
-				if (chunk.contains(spawnerPos)) {
-					c.spiderSpawner = spawnerPos;
-				}
-			}
+
+			if (c.hasCobwebs)
+				rand.nextSeed();
+
+//            if (c.hasCobwebs && c.spiderSpawner == null) {
+//				int l = center - 1 + rand.nextInt(3);
+//				BPos spawnerPos = CoordinateTransformer.getWorldPos(1, 0, l);
+//				if (chunk.contains(spawnerPos)) {
+//					c.spiderSpawner = spawnerPos;
+//				}
+//			}
         }
         
         if (c.hasRails) {
@@ -191,7 +198,7 @@ public class MineshaftLoot
     	// we need to process every chunk that contains our piece, in any order
     	for (CPos chunkPos : getPieceChunks(c)) {
     		rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), decorationSalt);
-	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
+	    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, -64, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, 512, (chunkPos.getZ() << 4)+15);
     		
 	    	for (MineshaftCorridor piece : corridors) {
 	    		if (piece.boundingBox.contains(c.boundingBox.getCenter()) && piece.boundingBox.intersects(chunk)) {
@@ -210,12 +217,11 @@ public class MineshaftLoot
     // returns chest positions and loot seeds within the desired chunk (for use with the LootContext object)
     public ArrayList<Pair<BPos, Long>> getAllChestsInChunk(CPos chunkPos, long worldSeed) {
     	rand.setDecoratorSeed(worldSeed, chunkPos.getX(), chunkPos.getZ(), decorationSalt);
-    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, (chunkPos.getZ() << 4)+15);
+    	BlockBox chunk = new BlockBox(chunkPos.getX() << 4, -64, chunkPos.getZ() << 4, (chunkPos.getX() << 4)+15, 512, (chunkPos.getZ() << 4)+15);
     	ArrayList <Pair<BPos, Long>> chests = new ArrayList<>();
         
     	for (MineshaftCorridor piece : corridors) {
     		if (piece.boundingBox.intersects(chunk)) {
-    	//		System.out.println("Piece processed: " + " rails: " + piece.hasRails + " cobwebs: " + piece.hasCobwebs + "   " + piece.bb);
     			chests.addAll( getChestsInPieceInChunk(piece, chunk) );
     		}
     	}

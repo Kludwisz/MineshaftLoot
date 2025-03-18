@@ -96,7 +96,7 @@ public class ExamplesToTest {
 
         ml.getCorridors().forEach(corridor -> {
             if (corridor.hasCobwebs) {
-                System.out.println("Spider corridor at " + tpCommand(corridor.boundingBox.getCenter()));
+                System.out.println("Spider spawner at " + tpCommand(corridor.boundingBox.getCenter()));
             }
         });
 
@@ -111,28 +111,26 @@ public class ExamplesToTest {
      */
     @Test
     public void getLootRecentVersion() {
+        // /tp 1833 6 1446
+        // loot seed -6129675194707288555L
         final MCVersion version = MCVersion.v1_21;
         final long worldSeed = 123456789L;
         final CPos mineshaftStartChunk = new CPos(7, 18);
-        final CPos chestChunk = new CPos(7, 17);
         MineshaftLoot ml = new MineshaftLoot(version);
 
         assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));
 
-        ArrayList<BPos> chests = new ArrayList<>();
-        ml.getCorridors().stream()
-                .filter(corridor -> !corridor.hasCobwebs)
-                .forEach(corridor -> {
-                    synchronized (chests) {
-                        corridor.addPossibleChestPositions(chests);
-                    }
-                });
+        ml.getAllChests(worldSeed).forEach(pair -> {
+            System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
+        });
 
-        for (BPos chest : chests) {
-            System.out.println("Chest at " + tpCommand(chest));
-        }
-
-        // output (height is incorrect):
+        // output:
+        // Chest at /tp @p 86 -50 316, loot seed -2192860901139324805
+        // Chest at /tp @p 74 -50 296, loot seed 5891562817750267457
+        // Chest at /tp @p 114 -51 225, loot seed -4850389438453708375
+        // Chest at /tp @p 125 -52 268, loot seed 1503253898584270261
+        // Chest at /tp @p 115 -52 282, loot seed 1453096150608108542
+        // Chest at /tp @p 123 -52 284, loot seed 7193641610172134796
     }
 
     private String tpCommand(Vec3i pos) {
