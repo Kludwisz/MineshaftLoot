@@ -1,13 +1,9 @@
 import com.seedfinding.mccore.util.math.Vec3i;
-import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import kludwisz.mineshafts.MineshaftLoot;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -107,7 +103,7 @@ public class ExamplesToTest {
     }
 
     /**
-     * Example of use: getting the positions of minecart chests (MC 1.21.4)
+     * Example of use: getting the positions and loot seeds of minecart chests (MC 1.21.4)
      */
     @Test
     public void getLootRecentVersion() {

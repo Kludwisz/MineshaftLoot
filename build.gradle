@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.github.kludwisz'
-version '1.3'
+version '1.5'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

@@ -1,8 +1,8 @@
 package kludwisz.rng;
 
 public class XoroshiroRandomSource implements RandomSource {
-	public long lo; // TODO make private
-	public long hi;
+	private long lo;
+	private long hi;
 
 	public XoroshiroRandomSource() {
 		this.lo = -7046029254386353131L;

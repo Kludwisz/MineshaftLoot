@@ -77,15 +77,6 @@ public class WorldgenRandom {
 		source.nextSeed();
 	}
 
-	public String getState() { // TODO remove
-		if (source instanceof XoroshiroRandomSource xoroshiro) {
-            return String.format("(%d, %d)", xoroshiro.lo, xoroshiro.hi);
-		}
-		else {
-			return "N/A";
-		}
-	}
-
 	// ---------------------------------------------------
 
 	public enum Type {

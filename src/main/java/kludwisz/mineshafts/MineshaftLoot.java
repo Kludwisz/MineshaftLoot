@@ -82,8 +82,6 @@ public class MineshaftLoot
             }
             
             //   get first chest
-			//System.out.println("First chest for corridor " + c.boundingBox.getCenter() + " at " + CoordinateTransformer.getWorldPos(2, 0, center-1));
-			//System.out.println("Current PRNG state: " + rand.getState());
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
             	if ( chunk.contains(chest) ) {
@@ -93,8 +91,6 @@ public class MineshaftLoot
             }
             
             //   get second chest
-			//System.out.println("Second chest for corridor " + c.boundingBox.getCenter() + " at " + CoordinateTransformer.getWorldPos(2, 0, center-1));
-			//System.out.println("Current PRNG state: " + rand.getState());
             if(rand.nextInt(100) == 0) {
             	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
             	if ( chunk.contains(chest) ) {
@@ -157,14 +153,6 @@ public class MineshaftLoot
 
 			if (c.hasCobwebs)
 				rand.nextSeed();
-
-//            if (c.hasCobwebs && c.spiderSpawner == null) {
-//				int l = center - 1 + rand.nextInt(3);
-//				BPos spawnerPos = CoordinateTransformer.getWorldPos(1, 0, l);
-//				if (chunk.contains(spawnerPos)) {
-//					c.spiderSpawner = spawnerPos;
-//				}
-//			}
         }
         
         if (c.hasRails) {
