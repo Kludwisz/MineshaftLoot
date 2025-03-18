@@ -1,18 +1,19 @@
 package kludwisz.mineshafts.util;
 
 import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mccore.util.block.BlockDirection;
 import com.seedfinding.mccore.util.pos.BPos;
 
 public class CoordinateTransformer 
 {
-	public static Direction facing = null;
+	public static BlockDirection facing = null;
 	public static BlockBox boundingBox = null;
 	
 	/*
-	 * @param _facing The Direction of the structurePiece
+	 * @param _facing The BlockDirection of the structurePiece
 	 * @param _boundingBox The BlockBox of the structurePiece
 	 */
-	public static void setParams(Direction _facing, BlockBox _boundingBox) {
+	public static void setParams(BlockDirection _facing, BlockBox _boundingBox) {
 		facing = _facing;
 		boundingBox = _boundingBox;
 	}

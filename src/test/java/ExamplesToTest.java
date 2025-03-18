@@ -1,9 +1,14 @@
 import com.seedfinding.mccore.util.math.Vec3i;
+import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import kludwisz.mineshafts.MineshaftLoot;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExamplesToTest {
@@ -78,7 +83,7 @@ public class ExamplesToTest {
     }
 
     /**
-     * Example of use: getting the (x,z) positions of spider corridors (MC 1.21.4)
+     * Example of use: getting all the positions of spider corridors (MC 1.21.4)
      */
     @Test
     public void getSpiderCorridorsRecentVersion() {
@@ -102,7 +107,7 @@ public class ExamplesToTest {
     }
 
     /**
-     * Example of use: getting the (x,z) positions of minecart chests (MC 1.21.4)
+     * Example of use: getting the positions of minecart chests (MC 1.21.4)
      */
     @Test
     public void getLootRecentVersion() {
@@ -114,9 +119,18 @@ public class ExamplesToTest {
 
         assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));
 
-        ml.getAllChestsInChunk(chestChunk, worldSeed).forEach(pair -> {
-            System.out.println("Chest at " + tpCommand(pair.getFirst()) + ", loot seed " + pair.getSecond());
-        });
+        ArrayList<BPos> chests = new ArrayList<>();
+        ml.getCorridors().stream()
+                .filter(corridor -> !corridor.hasCobwebs)
+                .forEach(corridor -> {
+                    synchronized (chests) {
+                        corridor.addPossibleChestPositions(chests);
+                    }
+                });
+
+        for (BPos chest : chests) {
+            System.out.println("Chest at " + tpCommand(chest));
+        }
 
         // output (height is incorrect):
     }

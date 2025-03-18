@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.seedfinding.mccore.util.block.BlockBox;
+import com.seedfinding.mccore.util.block.BlockDirection;
 import com.seedfinding.mcseed.rand.JRand;
-import kludwisz.mineshafts.util.Direction;
 
 public abstract class StructurePiece {
     public BlockBox boundingBox;
-    public Direction facing;
+    public BlockDirection facing;
     public int length;
 
     protected StructurePiece(int length) {
