@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.util.block.BlockDirection;
-import com.seedfinding.mccore.util.block.BlockMirror;
 import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
 import kludwisz.mineshafts.util.CoordinateTransformer;
+import kludwisz.mineshafts.util.StructurePiece;
 
 public class MineshaftGenerator {
     public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, MCVersion version, ArrayList<StructurePiece> pieces) {

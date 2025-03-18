@@ -12,6 +12,7 @@ import com.seedfinding.mccore.util.pos.CPos;
 
 import com.seedfinding.mccore.version.MCVersion;
 import kludwisz.mineshafts.util.CoordinateTransformer;
+import kludwisz.mineshafts.util.StructurePiece;
 import kludwisz.rng.WorldgenRandom;
 
 import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
