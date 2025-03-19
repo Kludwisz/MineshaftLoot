@@ -8,8 +8,7 @@ import com.seedfinding.mccore.util.block.BlockDirection;
 import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
-import kludwisz.mineshafts.util.CoordinateTransformer;
-import kludwisz.mineshafts.util.StructurePiece;
+import kludwisz.util.StructurePiece;
 
 public class MineshaftGenerator {
     public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, MCVersion version, ArrayList<StructurePiece> pieces) {
@@ -349,6 +348,18 @@ public class MineshaftGenerator {
         // ----------------------------------
         // post-generation property access
 
+        public boolean isSupportingBox(int relativeZ, BlockBox chunk) {
+//            for (int relativeX=0; relativeX<=2; relativeX++) {
+//                if (!chunk.contains(this.getWorldPos(relativeX, 3, relativeZ)))
+//                    return false;
+//            }
+//            return true;
+
+            // it's not possible for the center block to be in a different chunk than both side blocks
+            return chunk.contains(this.getWorldPos(0, 3, relativeZ))
+                    && chunk.contains(this.getWorldPos(2, 3, relativeZ));
+        }
+
         public List<BPos> getPossibleChestPositions() {
             ArrayList<BPos> poses = new ArrayList<>();
             addPossibleChestPositions(poses);
@@ -356,12 +367,10 @@ public class MineshaftGenerator {
         }
 
         public void addPossibleChestPositions(List<BPos> list) {
-            CoordinateTransformer.setParams(facing, boundingBox);
-
             for (int seg = 0; seg < numSegments; seg++) {
                 int z = 5 * seg + 2; // position of the support
-                list.add(CoordinateTransformer.getWorldPos(0, 0, z+1));
-                list.add(CoordinateTransformer.getWorldPos(2, 0, z-1));
+                list.add(this.getWorldPos(0, 0, z+1));
+                list.add(this.getWorldPos(2, 0, z-1));
             }
         }
     }
