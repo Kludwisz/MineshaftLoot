@@ -59,25 +59,10 @@ public class MineshaftLoot
 
         ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
         BPos chest;
-        int center;
 
         for (int j = 0; j < c.numSegments; j++) {
-        	center = j*5 + 2;
-        	
-        	//   supports, cobwebs and chests check for proper chunk placement first and only then make rand calls
-            //   that's why we need to skip only the calls that would occur inside the chunk's BlockBox
-        	//   for supports, we also need an extra isSupportingBox method that checks if the support's BlockBox lies in one chunk
-        	if (c.isSupportingBox(center, chunk)) {
-        		if (rand.nextInt(4) != 0) {
-                    rand.skip(2);
-                }
-        	}
-            
-        	//   cobwebs
-            for (int i=0; i<8; i++) {
-            	if ( chunk.contains( c.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
-            		rand.nextSeed();
-            }
+        	int center = j*5 + 2;
+        	skipInitialDecorators(c, chunk, center);
             
             //   get first chest
             if(rand.nextInt(100) == 0) {
@@ -97,18 +82,13 @@ public class MineshaftLoot
             	}
             }
         }
-        
-        //   unfortunately, rails (yet again) check for proper chunk placement before calling rand
-        if (c.hasRails) {
-        	for (int j=0; j<m; j++)
-        		if ( chunk.contains(c.getWorldPos(1, 0, j)) )
-        			rand.nextSeed();
-        }
+
+		skipRails(c, chunk);
         
         return chests;
     }
     
-    // same as getChestsInPieceInChunk, but slightly faster (and also handles spider corridors
+    // same as getChestsInPieceInChunk, but slightly faster (and also "handles" spider corridors)
     // practically the same as getAllChestsInPieceInChunk, but here we just skip everything, so it's faster
     public void skipCallsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
         int m = c.length * 5;
@@ -123,18 +103,8 @@ public class MineshaftLoot
 
         for (int j=0; j < c.length; j++) {
         	center = j*5 + 2;
-        	
-        	if (c.isSupportingBox(center, chunk)) {
-	            if(rand.nextInt(4) != 0) {
-	                rand.skip(2);
-	            }
-        	}
+			skipInitialDecorators(c, chunk, center);
 
-            for (int i=0; i<8; i++) {
-            	if (chunk.contains( c.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
-            		rand.nextSeed();
-            }
-            
             if(rand.nextInt(100) == 0) {
             	chest = c.getWorldPos(2, 0, center-1);
             	if (chunk.contains(chest))
@@ -150,13 +120,40 @@ public class MineshaftLoot
 			if (c.hasCobwebs)
 				rand.nextSeed();
         }
-        
-        if (c.hasRails) {
-        	for (int j=0; j<m; j++)
-        		if (chunk.contains(c.getWorldPos(1, 0, j)))
-        			rand.nextSeed();
-        }
+
+		skipRails(c, chunk);
     }
+
+	// skips support placement and cobweb placement calls
+	private void skipInitialDecorators(MineshaftCorridor c, BlockBox chunk, int center) {
+		//   supports, cobwebs and chests check for proper chunk placement first and only then make rand calls
+		//   that's why we need to skip only the calls that would occur inside the chunk's BlockBox
+		//   for supports, we also need an extra isSupportingBox method that checks if the support's BlockBox lies in one chunk
+
+		// supports
+		if (c.isSupportingBox(center, chunk)) {
+			if(rand.nextInt(4) != 0) {
+				rand.skip(2);
+			}
+		}
+
+		// cobwebs
+		for (int i=0; i<8; i++) {
+			if (chunk.contains(c.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
+				rand.nextSeed();
+		}
+	}
+
+	// skips rail placement calls
+	private void skipRails(MineshaftCorridor c, BlockBox chunk) {
+		if (!c.hasRails) return;
+
+		// rails, like cobwebs, check for proper chunk placement before calling rand
+		int m = c.length * 5;
+		for (int j=0; j<m; j++)
+			if (chunk.contains(c.getWorldPos(1, 0, j)))
+				rand.nextSeed();
+	}
 
 	public ArrayList<CPos> getPieceChunks(StructurePiece piece) {
 		ArrayList<CPos> pieceChunks = new ArrayList<>();
@@ -173,7 +170,9 @@ public class MineshaftLoot
 
 		return pieceChunks;
 	}
-    
+
+	// -----------------------------------------------------------------------------------------------------------------
+
     // WARNING! this is extremely inaccurate in oceans, would recommend to ignore the output if biome is ocean
     // returns chest positions and loot seeds within the desired corridor piece (for use with the LootContext object)
     public ArrayList<Pair<BPos, Long>> getAllChestsInCorridor(MineshaftCorridor c, long worldSeed) {
