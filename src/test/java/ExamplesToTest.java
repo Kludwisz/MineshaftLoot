@@ -92,7 +92,7 @@ public class ExamplesToTest {
 
         ml.getCorridors().forEach(corridor -> {
             if (corridor.hasCobwebs) {
-                System.out.println("Spider spawner at " + tpCommand(corridor.boundingBox.getCenter()));
+                System.out.println("Spider corridor at " + tpCommand(corridor.boundingBox.getCenter()));
             }
         });
 

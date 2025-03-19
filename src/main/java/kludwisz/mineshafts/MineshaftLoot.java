@@ -11,8 +11,7 @@ import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.util.pos.CPos;
 
 import com.seedfinding.mccore.version.MCVersion;
-import kludwisz.mineshafts.util.CoordinateTransformer;
-import kludwisz.mineshafts.util.StructurePiece;
+import kludwisz.util.StructurePiece;
 import kludwisz.rng.WorldgenRandom;
 
 import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
@@ -59,7 +58,6 @@ public class MineshaftLoot
 		rand.skip(m * 3); // skip ceiling air blocks
 
         ArrayList<Pair<BPos, Long>> chests = new ArrayList<>();
-        CoordinateTransformer.setParams(c.facing, c.boundingBox);
         BPos chest;
         int center;
 
@@ -68,8 +66,8 @@ public class MineshaftLoot
         	
         	//   supports, cobwebs and chests check for proper chunk placement first and only then make rand calls
             //   that's why we need to skip only the calls that would occur inside the chunk's BlockBox
-        	//   for supports, we also need an extra isSupportingBox method (defined in CoordinateTransformer)
-        	if (CoordinateTransformer.isSupportingBox(center, chunk)) {
+        	//   for supports, we also need an extra isSupportingBox method that checks if the support's BlockBox lies in one chunk
+        	if (c.isSupportingBox(center, chunk)) {
         		if (rand.nextInt(4) != 0) {
                     rand.skip(2);
                 }
@@ -77,13 +75,13 @@ public class MineshaftLoot
             
         	//   cobwebs
             for (int i=0; i<8; i++) {
-            	if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
+            	if ( chunk.contains( c.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
             		rand.nextSeed();
             }
             
             //   get first chest
             if(rand.nextInt(100) == 0) {
-            	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
+            	chest = c.getWorldPos(2, 0, center-1);
             	if ( chunk.contains(chest) ) {
             		rand.nextSeed();
             		chests.add(new Pair<>(chest, rand.nextLong()));
@@ -92,7 +90,7 @@ public class MineshaftLoot
             
             //   get second chest
             if(rand.nextInt(100) == 0) {
-            	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
+            	chest = c.getWorldPos(0, 0, center+1);
             	if ( chunk.contains(chest) ) {
             		rand.nextSeed();
             		chests.add(new Pair<>(chest, rand.nextLong()));
@@ -103,7 +101,7 @@ public class MineshaftLoot
         //   unfortunately, rails (yet again) check for proper chunk placement before calling rand
         if (c.hasRails) {
         	for (int j=0; j<m; j++)
-        		if ( chunk.contains(CoordinateTransformer.getWorldPos(1, 0, j)) )
+        		if ( chunk.contains(c.getWorldPos(1, 0, j)) )
         			rand.nextSeed();
         }
         
@@ -119,35 +117,33 @@ public class MineshaftLoot
         // if spawner corridor, skip cobwebs as well
         if (c.hasCobwebs)
         	rand.skip(m * 6);
-        
-        CoordinateTransformer.setParams(c.facing, c.boundingBox);
+
         BPos chest;
         int center;
-        boolean spiderSpawnerPlaced = false;
-        
-        for (int j=0; j<c.length; j++) {
+
+        for (int j=0; j < c.length; j++) {
         	center = j*5 + 2;
         	
-        	if (CoordinateTransformer.isSupportingBox(center, chunk)) {
+        	if (c.isSupportingBox(center, chunk)) {
 	            if(rand.nextInt(4) != 0) {
 	                rand.skip(2);
 	            }
         	}
 
             for (int i=0; i<8; i++) {
-            	if ( chunk.contains( CoordinateTransformer.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i]))) 
+            	if (chunk.contains( c.getWorldPos((i%2)*2, 2, center+cobwebPlacement[i])))
             		rand.nextSeed();
             }
             
             if(rand.nextInt(100) == 0) {
-            	chest = CoordinateTransformer.getWorldPos(2, 0, center-1);
-            	if ( chunk.contains(chest) )
+            	chest = c.getWorldPos(2, 0, center-1);
+            	if (chunk.contains(chest))
             		rand.skip(3);
             }
             
             if(rand.nextInt(100) == 0) {
-            	chest = CoordinateTransformer.getWorldPos(0, 0, center+1);
-            	if ( chunk.contains(chest) )
+            	chest = c.getWorldPos(0, 0, center+1);
+            	if (chunk.contains(chest))
             		rand.skip(3);
             }
 
@@ -157,7 +153,7 @@ public class MineshaftLoot
         
         if (c.hasRails) {
         	for (int j=0; j<m; j++)
-        		if ( chunk.contains(CoordinateTransformer.getWorldPos(1, 0, j)) )
+        		if (chunk.contains(c.getWorldPos(1, 0, j)))
         			rand.nextSeed();
         }
     }
