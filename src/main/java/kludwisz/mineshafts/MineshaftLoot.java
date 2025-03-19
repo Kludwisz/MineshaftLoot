@@ -19,7 +19,7 @@ import static kludwisz.mineshafts.MineshaftGenerator.MineshaftCorridor;
 public class MineshaftLoot 
 {
 	public static final int DECORATION_SALT_1_16 = 30000;
-	public static int DECORATION_SALT_1_21 = 30001;
+	public static final int DECORATION_SALT_1_21 = 30001;
 	private static final int[] cobwebPlacement = {-1, -1, 1, 1, -2, -2, 2, 2};
 
 	private final MCVersion version;

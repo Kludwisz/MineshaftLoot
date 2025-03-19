@@ -12,8 +12,6 @@ import kludwisz.util.StructurePiece;
 
 public class MineshaftGenerator {
     public static void generate(JRand rand, int chunkX, int chunkZ, boolean mesa, MCVersion version, ArrayList<StructurePiece> pieces) {
-        //ArrayList<StructurePiece> children = new ArrayList<>();
-        
         MineshaftGenerator.MineshaftRoom mineshaftRoom = new MineshaftGenerator.MineshaftRoom(0, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
         pieces.add(mineshaftRoom);
         mineshaftRoom.placeJigsaw(mineshaftRoom, pieces, rand);
