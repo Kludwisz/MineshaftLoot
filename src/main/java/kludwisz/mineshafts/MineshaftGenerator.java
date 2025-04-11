@@ -361,7 +361,7 @@ public class MineshaftGenerator {
         public List<BPos> getPossibleChestPositions() {
             ArrayList<BPos> poses = new ArrayList<>();
             addPossibleChestPositions(poses);
-            return null;
+            return poses;
         }
 
         public void addPossibleChestPositions(List<BPos> list) {
