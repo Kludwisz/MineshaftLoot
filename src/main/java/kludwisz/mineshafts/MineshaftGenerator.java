@@ -279,8 +279,8 @@ public class MineshaftGenerator {
 
                 this.airBoxes.add(new BlockBox(boundingBox.minX, minY, cz-1, boundingBox.minX, maxY, cz+1));
                 this.airBoxes.add(new BlockBox(boundingBox.maxX, minY, cz-1, boundingBox.maxX, maxY, cz+1));
-                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.minZ, cx+1, maxY, boundingBox.maxZ));
-                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.minZ, cx+1, maxY, boundingBox.maxZ));
+                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.minZ, cx+1, maxY, boundingBox.minZ));
+                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.maxZ, cx+1, maxY, boundingBox.maxZ));
             }
         }
     }
