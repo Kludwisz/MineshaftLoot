@@ -1,10 +1,13 @@
 package kludwisz.mineshafts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.util.block.BlockDirection;
+import com.seedfinding.mccore.util.block.BlockRotation;
+import com.seedfinding.mccore.util.math.Vec3i;
 import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
@@ -140,6 +143,25 @@ public class MineshaftGenerator {
             }
 
         }
+
+        public void calculateAirBoxes() {
+            this.airBoxes = new ArrayList<>(7);
+            BlockRotation rot = this.facing.getRotation();
+
+            BPos startPos = this.boundingBox.getInside(BPos.ORIGIN, rot);
+            int ox = startPos.getX();
+            int oy = startPos.getY();
+            int oz = startPos.getZ();
+
+            this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, 5, 0, 3, 3, 2, rot));
+            this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, 0, 7, 3, 3, 2, rot));
+
+            for (int i = 0; i < 5; i++) {
+                final int y = 5 - i - (i < 4 ? 1 : 0);
+                final int sizeY = 7 - i - y + 1;
+                this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, y, 2 + i, 3, sizeY, 1, rot));
+            }
+        }
     }
 
     public static class MineshaftCrossing extends StructurePiece {
@@ -226,7 +248,40 @@ public class MineshaftGenerator {
                     MineshaftGenerator.tryGenerateJigsaw(structurePiece, pieceList, rand, boundingBox.minX + 1, boundingBox.minY + 3 + 1, boundingBox.maxZ + 1, BlockDirection.SOUTH, length);
                 }
             }
+        }
 
+        public void calculateAirBoxes() {
+            this.airBoxes = new ArrayList<>(this.twoFloors ? 3+8 : 3+4);
+
+            Vec3i center = this.boundingBox.getCenter();
+            int cx = center.getX();
+            int cz = center.getZ();
+
+            // central boxes
+            this.airBoxes.add(new BlockBox(
+                    cx-1, boundingBox.minY, cz,
+                    cx+1, boundingBox.maxY, cz
+            ));
+            this.airBoxes.add(new BlockBox(
+                    cx, boundingBox.minY, cz-1,
+                    cx, boundingBox.maxY, cz-1
+            ));
+            this.airBoxes.add(new BlockBox(
+                    cx, boundingBox.minY, cz+1,
+                    cx, boundingBox.maxY, cz+1
+            ));
+
+            // entrance boxes
+            int floors = this.twoFloors ? 2 : 1;
+            for (int i = 0; i < floors; i++) {
+                final int minY = boundingBox.minY + i * 4;
+                final int maxY = minY + 2;
+
+                this.airBoxes.add(new BlockBox(boundingBox.minX, minY, cz-1, boundingBox.minX, maxY, cz+1));
+                this.airBoxes.add(new BlockBox(boundingBox.maxX, minY, cz-1, boundingBox.maxX, maxY, cz+1));
+                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.minZ, cx+1, maxY, boundingBox.maxZ));
+                this.airBoxes.add(new BlockBox(cx-1, minY, boundingBox.minZ, cx+1, maxY, boundingBox.maxZ));
+            }
         }
     }
 
@@ -343,6 +398,11 @@ public class MineshaftGenerator {
             }
         }
 
+        public void calculateAirBoxes() {
+            // FIXME inaccurate, need to account for supports
+            this.airBoxes = Collections.singletonList(this.boundingBox);
+        }
+
         // ----------------------------------
         // post-generation property access
 
@@ -421,6 +481,11 @@ public class MineshaftGenerator {
 
                 MineshaftGenerator.tryGenerateJigsaw(structurePiece, pieceList, rand, boundingBox.maxX + 1, boundingBox.minY + rand.nextInt(j) + 1, boundingBox.minZ + k, BlockDirection.EAST, length);
             }
+        }
+
+        public void calculateAirBoxes() {
+            // FIXME inaccurate
+            this.airBoxes = Collections.singletonList(this.boundingBox);
         }
     }
 }

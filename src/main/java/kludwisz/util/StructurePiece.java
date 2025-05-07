@@ -2,6 +2,7 @@ package kludwisz.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.seedfinding.mccore.util.block.BlockBox;
 import com.seedfinding.mccore.util.block.BlockDirection;
@@ -9,6 +10,7 @@ import com.seedfinding.mccore.util.pos.BPos;
 import com.seedfinding.mcseed.rand.JRand;
 
 public abstract class StructurePiece {
+    public List<BlockBox> airBoxes;
     public BlockBox boundingBox;
     public BlockDirection facing;
     public int length;
@@ -18,25 +20,11 @@ public abstract class StructurePiece {
     }
 
     public abstract void placeJigsaw(StructurePiece structurePiece, ArrayList<StructurePiece> list, JRand JRand);
-
-    public static StructurePiece getOverlappingPiece(ArrayList<StructurePiece> list, BlockBox blockBox) {
-        Iterator<StructurePiece> var2 = list.iterator();
-        StructurePiece structurePiece;
-        do {
-            if (!var2.hasNext()) {
-                return null;
-            }
-
-            structurePiece = var2.next();
-        } while (structurePiece.boundingBox == null || !structurePiece.boundingBox.intersects(blockBox));
-        return structurePiece;
-    }
+    public abstract void calculateAirBoxes();
 
     public void translate(int x, int y, int z) {
         this.boundingBox.move(x, y, z);
     }
-
-    // formerly part of CoordinateTransformer
 
     public BPos getWorldPos(int relativeX, int relativeY, int relativeZ) {
         return new BPos(
@@ -84,5 +72,46 @@ public abstract class StructurePiece {
                     return relativeZ;
             }
         }
+    }
+
+    // --------------------------------------------------------------------------------------------------------
+
+    public boolean airIntersectsBox(BlockBox box) {
+        if (airBoxes == null)
+            this.calculateAirBoxes();
+
+        for (BlockBox airBox : airBoxes) {
+            if (airBox.intersects(box)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean airContainsPos(BPos pos) {
+        if (airBoxes == null)
+            this.calculateAirBoxes();
+
+        for (BlockBox airBox : airBoxes) {
+            if (airBox.contains(pos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // --------------------------------------------------------------------------------------------------------
+
+    public static StructurePiece getOverlappingPiece(ArrayList<StructurePiece> list, BlockBox blockBox) {
+        Iterator<StructurePiece> var2 = list.iterator();
+        StructurePiece structurePiece;
+        do {
+            if (!var2.hasNext()) {
+                return null;
+            }
+
+            structurePiece = var2.next();
+        } while (structurePiece.boundingBox == null || !structurePiece.boundingBox.intersects(blockBox));
+        return structurePiece;
     }
 }
