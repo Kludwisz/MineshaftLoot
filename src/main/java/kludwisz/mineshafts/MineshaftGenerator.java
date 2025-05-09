@@ -9,6 +9,7 @@ import com.seedfinding.mccore.util.block.BlockDirection;
 import com.seedfinding.mccore.util.block.BlockRotation;
 import com.seedfinding.mccore.util.math.Vec3i;
 import com.seedfinding.mccore.util.pos.BPos;
+import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcseed.rand.JRand;
 import kludwisz.util.StructurePiece;
@@ -399,8 +400,42 @@ public class MineshaftGenerator {
         }
 
         public void calculateAirBoxes() {
-            // FIXME inaccurate, need to account for supports
-            this.airBoxes = Collections.singletonList(this.boundingBox);
+            // check if supports will generate
+            CPos pos1 = this.getWorldPos(0, 0, 0).toChunkPos();
+            CPos pos2 = this.getWorldPos(2, 0, 0).toChunkPos();
+
+            if (pos1.equals(pos2)) {
+                // all supports will generate, splitting the corridor into 2*numSegments+1 air boxes
+                this.airBoxes = new ArrayList<>(2*this.numSegments + 1);
+
+                for (int j = 0; j < this.numSegments; j++) {
+                    int relativeZ = j * 5 + 2;
+                    int previousZ = Math.max(0, relativeZ - 4);
+
+                    // air before support
+                    this.airBoxes.add(new BlockBox(
+                            this.getWorldPos(0, 0, previousZ),
+                            this.getWorldPos(2, 2, relativeZ)
+                    ));
+                    // air inside support
+                    this.airBoxes.add(new BlockBox(
+                            this.getWorldPos(1, 0, relativeZ),
+                            this.getWorldPos(1, 1, relativeZ)
+                    ));
+                }
+
+                // air after last support
+                int lastZMin = this.numSegments * 5 - 2;
+                int lastZMax = lastZMin + 1;
+                this.airBoxes.add(new BlockBox(
+                        this.getWorldPos(0, 0, lastZMin),
+                        this.getWorldPos(2, 2, lastZMax)
+                ));
+            }
+            else {
+                // crossing a chunk border, supports will never generate, so it's just all air
+                this.airBoxes = Collections.singletonList(this.boundingBox);
+            }
         }
 
         // ----------------------------------
