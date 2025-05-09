@@ -415,7 +415,7 @@ public class MineshaftGenerator {
                     // air before support
                     this.airBoxes.add(new BlockBox(
                             this.getWorldPos(0, 0, previousZ),
-                            this.getWorldPos(2, 2, relativeZ)
+                            this.getWorldPos(2, 2, relativeZ-1)
                     ));
                     // air inside support
                     this.airBoxes.add(new BlockBox(

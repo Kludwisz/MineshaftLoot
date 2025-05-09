@@ -107,6 +107,44 @@ public class AirBoxTests {
         System.out.println("Mineshaft Crossing Airboxes OK");
     }
 
+    @Test
+    public void testCorridorAirBoxes() {
+        FakeJRand rand = new FakeJRand();
+        rand.nextIntValue = 1;
+        BlockBox box = MineshaftGenerator.MineshaftCorridor.getBoundingBox(new ArrayList<>(), rand, -689, -6, -2811, BlockDirection.NORTH);
+        MineshaftGenerator.MineshaftCorridor corridor = new MineshaftGenerator.MineshaftCorridor(0, rand, box, BlockDirection.NORTH);
+        corridor.calculateAirBoxes();
+        List<BlockBox> expectedBoxes = getListFromString(
+                """
+                BlockBox{minX=-689, minY=-6, minZ=-2825, maxX=-687, maxY=-4, maxZ=-2811}
+                """
+        );
+        assertEquals(
+                new HashSet<>(expectedBoxes),
+                new HashSet<>(corridor.airBoxes)
+        );
+
+        rand.nextIntValue = 0;
+        box = MineshaftGenerator.MineshaftCorridor.getBoundingBox(new ArrayList<>(), rand, -695, -5, -2810, BlockDirection.EAST);
+        corridor = new MineshaftGenerator.MineshaftCorridor(0, rand, box, BlockDirection.EAST);
+        corridor.calculateAirBoxes();
+        for (BlockBox airBox : corridor.airBoxes) {
+            System.out.println(airBox);
+        }
+        expectedBoxes = getListFromString(
+                """
+                BlockBox{minX=-695, minY=-5, minZ=-2810, maxX=-694, maxY=-3, maxZ=-2808}
+                BlockBox{minX=-693, minY=-5, minZ=-2809, maxX=-693, maxY=-4, maxZ=-2809}
+                BlockBox{minX=-692, minY=-5, minZ=-2810, maxX=-689, maxY=-3, maxZ=-2808}
+                BlockBox{minX=-688, minY=-5, minZ=-2809, maxX=-688, maxY=-4, maxZ=-2809}
+                BlockBox{minX=-687, minY=-5, minZ=-2810, maxX=-686, maxY=-3, maxZ=-2808}
+                """
+        );
+        assertEquals(
+                new HashSet<>(expectedBoxes),
+                new HashSet<>(corridor.airBoxes)
+        );
+    }
 
     private static List<BlockBox> getListFromString(String output) {
         List<BlockBox> list = new ArrayList<>();
