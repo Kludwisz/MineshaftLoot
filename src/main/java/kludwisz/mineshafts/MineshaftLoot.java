@@ -91,7 +91,7 @@ public class MineshaftLoot
     // same as getChestsInPieceInChunk, but slightly faster (and also "handles" spider corridors)
     // practically the same as getAllChestsInPieceInChunk, but here we just skip everything, so it's faster
     public void skipCallsInPieceInChunk(MineshaftCorridor c, BlockBox chunk) {
-        int m = c.length * 5;
+        int m = c.numSegments * 5;
         rand.skip(m * 3); // ceiling air
         
         // if spawner corridor, skip cobwebs as well
@@ -101,7 +101,7 @@ public class MineshaftLoot
         BPos chest;
         int center;
 
-        for (int j=0; j < c.length; j++) {
+        for (int j = 0; j < c.numSegments; j++) {
         	center = j*5 + 2;
 			skipInitialDecorators(c, chunk, center);
 
@@ -149,7 +149,7 @@ public class MineshaftLoot
 		if (!c.hasRails) return;
 
 		// rails, like cobwebs, check for proper chunk placement before calling rand
-		int m = c.length * 5;
+		int m = c.depth * 5;
 		for (int j=0; j<m; j++)
 			if (chunk.contains(c.getWorldPos(1, 0, j)))
 				rand.nextSeed();

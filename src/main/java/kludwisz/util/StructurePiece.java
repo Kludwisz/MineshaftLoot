@@ -13,10 +13,10 @@ public abstract class StructurePiece {
     public List<BlockBox> airBoxes;
     public BlockBox boundingBox;
     public BlockDirection facing;
-    public int length;
+    public int depth;
 
-    protected StructurePiece(int length) {
-        this.length = length;
+    protected StructurePiece(int depth) {
+        this.depth = depth;
     }
 
     public abstract void placeJigsaw(StructurePiece structurePiece, ArrayList<StructurePiece> list, JRand JRand);
