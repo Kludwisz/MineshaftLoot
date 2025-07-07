@@ -149,7 +149,7 @@ public class MineshaftLoot
 		if (!c.hasRails) return;
 
 		// rails, like cobwebs, check for proper chunk placement before calling rand
-		int m = c.depth * 5;
+		int m = c.numSegments * 5;
 		for (int j=0; j<m; j++)
 			if (chunk.contains(c.getWorldPos(1, 0, j)))
 				rand.nextSeed();
