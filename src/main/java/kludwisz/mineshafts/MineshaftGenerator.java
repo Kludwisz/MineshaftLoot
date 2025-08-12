@@ -147,20 +147,14 @@ public class MineshaftGenerator {
 
         public void calculateAirBoxes() {
             this.airBoxes = new ArrayList<>(7);
-            BlockRotation rot = this.facing.getRotation();
 
-            BPos startPos = this.boundingBox.getInside(BPos.ORIGIN, rot);
-            int ox = startPos.getX();
-            int oy = startPos.getY();
-            int oz = startPos.getZ();
-
-            this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, 5, 0, 3, 3, 2, rot));
-            this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, 0, 7, 3, 3, 2, rot));
+            this.airBoxes.add(new BlockBox(getWorldPos(0, 5, 0), getWorldPos(2, 7, 1)));
+            this.airBoxes.add(new BlockBox(getWorldPos(0, 0, 7), getWorldPos(2, 2, 8)));
 
             for (int i = 0; i < 5; i++) {
                 final int y = 5 - i - (i < 4 ? 1 : 0);
                 final int sizeY = 7 - i - y + 1;
-                this.airBoxes.add(BlockBox.rotated(ox, oy, oz, 0, y, 2 + i, 3, sizeY, 1, rot));
+                this.airBoxes.add(new BlockBox(getWorldPos(0, y, 2+i), getWorldPos(2, y+sizeY-1, 2+i)));
             }
         }
     }
