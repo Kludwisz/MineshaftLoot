@@ -79,6 +79,30 @@ public class ExamplesToTest {
     }
 
     /**
+     * getting all the positions of spider corridors for version range 1.18 - 1.18.2
+     */
+    @Test
+    public void getSpiderCorridors1_18() {
+        final MCVersion version = MCVersion.v1_18_2;
+        final long worldSeed = 12345L;
+        final CPos mineshaftStartChunk = new CPos(74, -151);
+        MineshaftLoot ml = new MineshaftLoot(version);
+
+        assertTrue(ml.generateMineshaft(worldSeed, mineshaftStartChunk, false));
+
+        ml.getCorridors().forEach(corridor -> {
+            if (corridor.hasCobwebs) {
+                System.out.println("Spider corridor at " + tpCommand(corridor.boundingBox.getCenter()));
+            }
+        });
+
+        // Output:
+        // Spider corridor at /tp @p 1243 -35 -2385
+        // Spider corridor at /tp @p 1200 -37 -2408
+        // Spider corridor at /tp @p 1148 -34 -2435
+    }
+
+    /**
      * Example of use: getting all the positions of spider corridors (MC 1.21.4)
      */
     @Test

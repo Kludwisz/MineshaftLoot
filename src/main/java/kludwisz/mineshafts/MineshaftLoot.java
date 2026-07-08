@@ -241,7 +241,7 @@ public class MineshaftLoot
 		long s = carverRand.setCarverSeed(structureSeed, cx, cz, MCVersion.v1_16_1);
 
 		if (carverRand.nextDouble() < 0.004D) {
-			if (version.isOlderThan(MCVersion.v1_18)) // TODO verify
+			if (version.isOlderThan(MCVersion.v1_19)) // TODO verify
 				carverRand.setSeed(s);
 			MineshaftGenerator.generate(carverRand, cx, cz, mesa, version, mineshaftPieces);
 		}
